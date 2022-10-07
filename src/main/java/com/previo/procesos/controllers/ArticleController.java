@@ -24,7 +24,7 @@ public class ArticleController {
     @GetMapping(value = "/article/{code}")
     public ResponseEntity getByCode(@PathVariable String code) {
         Optional<Article> listArticleForCode = articleRepository.findAllByCode(code);
-        if (!listArticleForCode.isPresent()) {
+        if (listArticleForCode.isPresent()) {
             return new ResponseEntity<>(listArticleForCode, HttpStatus.OK);
         }
         return ResponseEntity.notFound().build();
