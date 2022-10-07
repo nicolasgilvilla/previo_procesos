@@ -2,7 +2,9 @@ package com.previo.procesos.controllers;
 
 
 import com.previo.procesos.models.Article;
+import com.previo.procesos.models.Category;
 import com.previo.procesos.repository.ArticleRepository;
+import com.previo.procesos.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,12 @@ public class ArticleController {
 
     @Autowired
     private ArticleRepository articleRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @GetMapping(value = "/article/{code}")
     public ResponseEntity getByCode(@PathVariable String code) {
-        Optional<Article> listArticleForCode = articleRepository.findOneByCode(code);
+        Optional<Article> listArticleForCode = articleRepository.findAllByCode(code);
         if (!listArticleForCode.isPresent()) {
             return new ResponseEntity<>(listArticleForCode, HttpStatus.OK);
         }
@@ -31,6 +35,16 @@ public class ArticleController {
         try {
             articleRepository.save(article);
             return new ResponseEntity(article, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping(value = "/category")
+    public ResponseEntity createCategory(@RequestBody Category category) {
+        try {
+            categoryRepository.save(category);
+            return new ResponseEntity(category, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
@@ -49,7 +63,7 @@ public class ArticleController {
 
     @PutMapping(value = "/article/{code}")
     public ResponseEntity updateArticle(@PathVariable String code, @RequestBody Article article) {
-        Optional<Article> articleFind = articleRepository.findOneByCode(code);
+        Optional<Article> articleFind = articleRepository.findAllByCode(code);
         try {
             if (articleFind.isPresent()) {
                 Article articlePresent = articleFind.get();
@@ -73,7 +87,7 @@ public class ArticleController {
 
     @DeleteMapping(value = "/article/{code}")
     public ResponseEntity deleteArticle(@PathVariable String code) {
-        Optional<Article> article = articleRepository.findOneByCode(code);
+        Optional<Article> article = articleRepository.findAllByCode(code);
         if (article.isPresent()) {
             articleRepository.delete(article.get());
             return ResponseEntity.noContent().build();
