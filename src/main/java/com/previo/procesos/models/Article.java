@@ -30,12 +30,12 @@ public class Article {
     private Category category;
 
     @Column(length = 10, nullable = false)
-    private String stock;
+    private Integer stock;
 
     @Column(length = 20, nullable = false)
-    private String salePrice;
+    private Float salePrice;
 
     @Column(length = 20)
-    private String purchasePrice;
+    private Float purchasePrice;
 
 }
