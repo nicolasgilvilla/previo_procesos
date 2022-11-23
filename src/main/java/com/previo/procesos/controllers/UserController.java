@@ -1,6 +1,7 @@
 package com.previo.procesos.controllers;
 
 import com.previo.procesos.models.UserModel;
+import com.previo.procesos.repository.UserRepository;
 import com.previo.procesos.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping(value = "/user")
     public ResponseEntity createUser(@Valid @RequestBody UserModel userModel) {
+        UserModel userFind = userRepository.findByEmail(userModel.getEmail());
+        if (userFind != null) {
+            return ResponseEntity.badRequest().body("Este correo ya tiene un registro.");
+        }
         return userService.createUser(userModel);
     }
 

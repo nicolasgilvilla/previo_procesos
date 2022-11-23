@@ -20,11 +20,11 @@ public class UserServiceImpl implements UserService {
     private JWTUtil jwtUtil;
 
     @Override
-    public ResponseEntity<UserModel> createUser(UserModel user) {
+    public ResponseEntity<UserModel> createUser(UserModel userModel) {
         try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
-            return new ResponseEntity(user, HttpStatus.CREATED);
+            userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+            userRepository.save(userModel);
+            return new ResponseEntity(userModel, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
