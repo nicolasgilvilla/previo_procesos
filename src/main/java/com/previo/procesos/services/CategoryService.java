@@ -1,14 +1,14 @@
 package com.previo.procesos.services;
 
-import com.previo.procesos.models.Category;
+import com.previo.procesos.models.CategoryModel;
 import org.springframework.http.ResponseEntity;
 
 public interface CategoryService {
 
-    ResponseEntity<Category> createCategory(Category category);
+    ResponseEntity<CategoryModel> createCategory(CategoryModel categoryModel);
 
-    ResponseEntity<Category> updateCategory(Long id, Category category);
+    ResponseEntity<CategoryModel> updateCategory(Long id, CategoryModel categoryModel);
 
-    ResponseEntity<Category> deleteCategory(Long id);
+    ResponseEntity<CategoryModel> deleteCategory(Long id);
 
 }

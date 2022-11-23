@@ -1,6 +1,6 @@
 package com.previo.procesos.controllers;
 
-import com.previo.procesos.models.Category;
+import com.previo.procesos.models.CategoryModel;
 import com.previo.procesos.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +12,13 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping(value = "/category")
-    public ResponseEntity createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public ResponseEntity createCategory(@RequestBody CategoryModel categoryModel) {
+        return categoryService.createCategory(categoryModel);
     }
 
     @PutMapping(value = "/category/{id}")
-    public ResponseEntity updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        return categoryService.updateCategory(id, category);
+    public ResponseEntity updateCategory(@PathVariable Long id, @RequestBody CategoryModel categoryModel) {
+        return categoryService.updateCategory(id, categoryModel);
     }
 
     @DeleteMapping(value = "/category/{id}")

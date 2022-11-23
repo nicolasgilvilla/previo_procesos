@@ -1,12 +1,12 @@
 package com.previo.procesos.repository;
 
-import com.previo.procesos.models.Article;
+import com.previo.procesos.models.ArticleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ArticleRepository extends JpaRepository<Article, String> {
+public interface ArticleRepository extends JpaRepository<ArticleModel, String> {
 
-    Optional<Article> findAllByCode(String code);
+    Optional<ArticleModel> findAllByCode(String code);
 
 }

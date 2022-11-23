@@ -10,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "article")
-public class Article {
+public class ArticleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,7 @@ public class Article {
     private Date dateOfRegister;
 
     @ManyToOne
-    private Category category;
+    private CategoryModel categoryModel;
 
     @Column(length = 10, nullable = false)
     private Integer stock;

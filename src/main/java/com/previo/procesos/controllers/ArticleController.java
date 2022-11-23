@@ -1,14 +1,11 @@
 package com.previo.procesos.controllers;
 
 
-import com.previo.procesos.models.Article;
+import com.previo.procesos.models.ArticleModel;
 import com.previo.procesos.services.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ArticleController {
@@ -23,8 +20,8 @@ public class ArticleController {
     }
 
     @PostMapping(value = "/article")
-    public ResponseEntity createArticle(@RequestBody Article article) {
-        return articleService.createArticle(article);
+    public ResponseEntity createArticle(@RequestBody ArticleModel articleModel) {
+        return articleService.createArticle(articleModel);
     }
 
 
@@ -35,8 +32,8 @@ public class ArticleController {
 
 
     @PutMapping(value = "/article/{code}")
-    public ResponseEntity updateArticle(@PathVariable String code, @RequestBody Article article) {
-        return articleService.updateArticle(code, article);
+    public ResponseEntity updateArticle(@PathVariable String code, @RequestBody ArticleModel articleModel) {
+        return articleService.updateArticle(code, articleModel);
     }
 
     @DeleteMapping(value = "/article/{code}")

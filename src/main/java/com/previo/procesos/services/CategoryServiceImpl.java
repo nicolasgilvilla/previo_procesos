@@ -1,6 +1,6 @@
 package com.previo.procesos.services;
 
-import com.previo.procesos.models.Category;
+import com.previo.procesos.models.CategoryModel;
 import com.previo.procesos.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,24 +17,24 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity createCategory(@RequestBody Category category) {
+    public ResponseEntity createCategory(@RequestBody CategoryModel categoryModel) {
         try {
-            categoryRepository.save(category);
-            return new ResponseEntity(category, HttpStatus.CREATED);
+            categoryRepository.save(categoryModel);
+            return new ResponseEntity(categoryModel, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @Override
-    public ResponseEntity<Category> updateCategory(Long id, Category category) {
-        Optional<Category> categoryFind = categoryRepository.findById(id);
+    public ResponseEntity<CategoryModel> updateCategory(Long id, CategoryModel categoryModel) {
+        Optional<CategoryModel> categoryFind = categoryRepository.findById(id);
         if (categoryFind.isPresent()) {
             try {
-                categoryFind.get().setName(category.getName());
-                categoryFind.get().setDescription(category.getDescription());
+                categoryFind.get().setName(categoryModel.getName());
+                categoryFind.get().setDescription(categoryModel.getDescription());
                 categoryRepository.save(categoryFind.get());
-                return new ResponseEntity(category, HttpStatus.OK);
+                return new ResponseEntity(categoryModel, HttpStatus.OK);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
@@ -43,8 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<Category> deleteCategory(Long id) {
-        Optional<Category> categoryFind = categoryRepository.findById(id);
+    public ResponseEntity<CategoryModel> deleteCategory(Long id) {
+        Optional<CategoryModel> categoryFind = categoryRepository.findById(id);
         if (categoryFind.isPresent()) {
             categoryRepository.delete(categoryFind.get());
             return ResponseEntity.noContent().build();

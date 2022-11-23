@@ -1,14 +1,15 @@
 package com.previo.procesos.services;
 
-import com.previo.procesos.models.Article;
-import com.previo.procesos.models.Category;
+import com.previo.procesos.models.ArticleModel;
+import com.previo.procesos.models.CategoryModel;
 import com.previo.procesos.repository.ArticleRepository;
 import com.previo.procesos.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ResponseEntity getByCode(@PathVariable String code) {
-        Optional<Article> listArticleForCode = articleRepository.findAllByCode(code);
+        Optional<ArticleModel> listArticleForCode = articleRepository.findAllByCode(code);
         if (listArticleForCode.isPresent()) {
             return new ResponseEntity<>(listArticleForCode, HttpStatus.OK);
         }
@@ -31,13 +32,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ResponseEntity createArticle(@RequestBody Article article) {
-        Long idCategory = article.getCategory().getId();
-        Optional<Category> articleFind = categoryRepository.findById(idCategory);
+    public ResponseEntity createArticle(@RequestBody ArticleModel articleModel) {
+        Long idCategory = articleModel.getCategoryModel().getId();
+        Optional<CategoryModel> articleFind = categoryRepository.findById(idCategory);
         if (articleFind.isPresent()) {
             try {
-                articleRepository.save(article);
-                return new ResponseEntity(article, HttpStatus.CREATED);
+                articleRepository.save(articleModel);
+                return new ResponseEntity(articleModel, HttpStatus.CREATED);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().build();
             }
@@ -49,30 +50,30 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ResponseEntity listArticle() {
-        List<Article> listArticle = articleRepository.findAll();
-        if (!listArticle.isEmpty()) {
-            return new ResponseEntity<>(listArticle, HttpStatus.OK);
+        List<ArticleModel> listArticleModel = articleRepository.findAll();
+        if (!listArticleModel.isEmpty()) {
+            return new ResponseEntity<>(listArticleModel, HttpStatus.OK);
         }
         return ResponseEntity.notFound().build();
     }
 
 
     @Override
-    public ResponseEntity updateArticle(@PathVariable String code, @RequestBody Article article) {
-        Optional<Article> articleFind = articleRepository.findAllByCode(code);
+    public ResponseEntity updateArticle(@PathVariable String code, @RequestBody ArticleModel articleModel) {
+        Optional<ArticleModel> articleFind = articleRepository.findAllByCode(code);
         try {
             if (articleFind.isPresent()) {
-                Article articlePresent = articleFind.get();
-                articlePresent.setCode(article.getCode());
-                articlePresent.setName(article.getName());
-                articlePresent.setDescription(article.getDescription());
-                articlePresent.setDateOfRegister(article.getDateOfRegister());
-                articlePresent.setCategory(article.getCategory());
-                articlePresent.setStock(article.getStock());
-                articlePresent.setPurchasePrice(article.getPurchasePrice());
-                articlePresent.setSalePrice(article.getSalePrice());
-                articleRepository.save(articlePresent);
-                return new ResponseEntity(articlePresent, HttpStatus.OK);
+                ArticleModel articleModelPresent = articleFind.get();
+                articleModelPresent.setCode(articleModel.getCode());
+                articleModelPresent.setName(articleModel.getName());
+                articleModelPresent.setDescription(articleModel.getDescription());
+                articleModelPresent.setDateOfRegister(articleModel.getDateOfRegister());
+                articleModelPresent.setCategoryModel(articleModel.getCategoryModel());
+                articleModelPresent.setStock(articleModel.getStock());
+                articleModelPresent.setPurchasePrice(articleModel.getPurchasePrice());
+                articleModelPresent.setSalePrice(articleModel.getSalePrice());
+                articleRepository.save(articleModelPresent);
+                return new ResponseEntity(articleModelPresent, HttpStatus.OK);
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -83,7 +84,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ResponseEntity deleteArticle(@PathVariable String code) {
-        Optional<Article> article = articleRepository.findAllByCode(code);
+        Optional<ArticleModel> article = articleRepository.findAllByCode(code);
         if (article.isPresent()) {
             articleRepository.delete(article.get());
             return ResponseEntity.noContent().build();
