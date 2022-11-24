@@ -12,7 +12,10 @@ import org.mockito.Mock;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,21 +47,35 @@ class CategoryServiceImplTest {
         CategoryModel mockCategoryModel = null;
 
         when(categoryRepository.save(mockCategoryModel)).thenReturn(any());
-        ResponseEntity mockArticleService = categoryService.createCategory(any());
+        ResponseEntity mockCategoryService = categoryService.createCategory(any());
 
 
-        Assertions.assertNotNull(mockArticleService);
-        Assertions.assertEquals(404, mockArticleService.getStatusCodeValue());
+        Assertions.assertNotNull(mockCategoryService);
+        Assertions.assertEquals(404, mockCategoryService.getStatusCodeValue());
     }
 
     @Test
-    void whenUpdateCategoryReturnSuccess() {
+    void whenUpdateCategoryReturnBadRequest() {
         CategoryModel mockCategoryModel = FactoryTestData.mockCategoryModel();
 
         when(categoryRepository.save(any(CategoryModel.class))).thenReturn(mockCategoryModel);
         ResponseEntity mockCategoryService = categoryService.updateCategory(mockCategoryModel.getId(), FactoryTestData.mockCategoryModel());
 
         Assertions.assertNotNull(mockCategoryService);
+        Assertions.assertEquals(400, mockCategoryService.getStatusCodeValue());
+    }
+
+    @Test
+    void whenUpdateCategoryReturnSuccess() {
+        CategoryModel mockCategoryModel = FactoryTestData.mockCategoryModel();
+        CategoryModel mockCategoryModelUpdate = FactoryTestData.mockCategoryModelUpdate();
+        given(categoryRepository.findById(mockCategoryModel.getId())).willReturn(Optional.of(mockCategoryModel));
+        given(categoryRepository.save(mockCategoryModelUpdate)).willReturn(mockCategoryModelUpdate);
+
+
+        ResponseEntity articleResponse = categoryService.updateCategory(mockCategoryModel.getId(), mockCategoryModelUpdate);
+
+        Assertions.assertNotNull(articleResponse);
     }
 
 }

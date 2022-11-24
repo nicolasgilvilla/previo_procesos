@@ -71,4 +71,12 @@ public class FactoryTestData {
         categoryModel.setDescription("This category is for test");
         return categoryModel;
     }
+
+    public static CategoryModel mockCategoryModelUpdate() {
+        CategoryModel categoryModel = new CategoryModel();
+        categoryModel.setId(1L);
+        categoryModel.setName("Category update test");
+        categoryModel.setDescription("This category is for test update");
+        return categoryModel;
+    }
 }

@@ -19,7 +19,9 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class ArticleServiceImplTest {
@@ -51,7 +53,7 @@ class ArticleServiceImplTest {
         ResponseEntity mockArticleService = articleService.getByCode(mockArticleModel.getCode());
 
         Assertions.assertNotNull(mockArticleService);
-        Assertions.assertEquals( 404, mockArticleService.getStatusCodeValue());
+        Assertions.assertEquals(404, mockArticleService.getStatusCodeValue());
     }
 
     @Test
@@ -78,7 +80,7 @@ class ArticleServiceImplTest {
 
 
         Assertions.assertNotNull(mockArticleService);
-        Assertions.assertEquals( 400, mockArticleService.getStatusCodeValue());
+        Assertions.assertEquals(400, mockArticleService.getStatusCodeValue());
     }
 
     @Test
@@ -89,7 +91,7 @@ class ArticleServiceImplTest {
         when(categoryRepository.findById(mockCategoryModel.getId())).thenReturn(Optional.empty());
         when(articleRepository.save(any(ArticleModel.class))).thenThrow(new NullPointerException());
 
-        Assertions.assertThrows(NullPointerException.class, () ->{
+        Assertions.assertThrows(NullPointerException.class, () -> {
             articleService.createArticle(mockArticleModel);
         });
     }
@@ -108,12 +110,12 @@ class ArticleServiceImplTest {
         ResponseEntity mockArticleService = articleService.listArticle();
 
         Assertions.assertNotNull(mockArticleService);
-        Assertions.assertEquals( 404, mockArticleService.getStatusCodeValue());
+        Assertions.assertEquals(404, mockArticleService.getStatusCodeValue());
     }
 
 
     @Test
-    void whenUpdateArticleReturnSuccess() {
+    void whenUpdateArticleReturnNoFound() {
         ArticleModel mockArticleModel = FactoryTestData.mockArticleModel();
         CategoryModel mockCategoryModel = FactoryTestData.mockCategoryModel();
         ArticleModel mockArticleModelUpdate = FactoryTestData.mockArticleUpdateModel();
@@ -126,6 +128,21 @@ class ArticleServiceImplTest {
                 mockArticleModelUpdate);
 
         Assertions.assertNotNull(mockArticleService);
+        Assertions.assertEquals(404, mockArticleService.getStatusCodeValue());
+    }
+
+    @Test
+    void whenUpdateArticleReturnSuccess() {
+        ArticleModel mockArticleModel = FactoryTestData.mockArticleModel();
+        ArticleModel mockArticleModUpdate = FactoryTestData.mockArticleUpdateModel();
+        given(articleRepository.findAllByCode(mockArticleModel.getCode())).willReturn(Optional.of(mockArticleModel));
+        given(articleRepository.save(mockArticleModUpdate)).willReturn(mockArticleModUpdate);
+
+
+        ResponseEntity articleResponse = articleService.updateArticle(mockArticleModel.getCode(), mockArticleModUpdate);
+
+        Assertions.assertNotNull(articleResponse);
+
     }
 
 
